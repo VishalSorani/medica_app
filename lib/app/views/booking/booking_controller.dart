@@ -142,3 +142,4 @@ class BookingController extends GetxController {
     return DateTime.utc(dateTime.year, dateTime.month, dateTime.day);
   }
 }
+
