@@ -14,5 +14,5 @@ abstract class Routes {
   static const manageAppointments = '/manageAppointments';
   static const profile = '/profile';
   static const userAppointments = '/UserAppointments';
-
+  static const reel = '/reel';
 }

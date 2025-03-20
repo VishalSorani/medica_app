@@ -4,7 +4,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medica_app/app/models/repository/user_repository.dart';
 import 'package:medica_app/app/models/user.dart';
 import 'package:medica_app/app/routes/app_pages.dart';
+import 'package:medica_app/app/views/homeScreen/home_controller.dart';
+import 'package:medica_app/app/views/mainscreen/main_controller.dart';
 import 'package:medica_app/app/views/profile/profile_controller.dart';
+import 'package:medica_app/app/views/reels/reel_controller.dart';
 
 class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -90,6 +93,7 @@ class AuthRepository {
           id: userCredential.user!.uid,
           name: userCredential.user!.displayName ?? '',
           contactNumber: '',
+          reels: [],
           isAdmin: false,
           createdAt: DateTime.now(),
           email: userCredential.user!.email ?? 'No Email',
@@ -113,6 +117,8 @@ class AuthRepository {
 
   Future<void> signout() async {
     Get.delete<ProfileController>(force: true);
+    Get.delete<ReelController>(force: true);
+    Get.delete<HomeController>(force: true);
     await _auth.signOut();
   }
 

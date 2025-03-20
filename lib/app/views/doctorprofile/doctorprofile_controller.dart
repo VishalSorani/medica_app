@@ -16,13 +16,13 @@ class DoctorProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    isLoading = true;
+    update([loading]);
     if (Get.arguments[doctorInfo] != null) {
       doctor = Get.arguments[doctorInfo];
     }
-  }
-
-  void updateLoading(bool val) {
-    isLoading = val;
+    isLoading = false;
     update([loading]);
   }
+
 }

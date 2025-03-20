@@ -10,6 +10,7 @@ import 'package:medica_app/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:medica_app/app/views/mainscreen/main_controller.dart';
 import 'package:medica_app/app/views/profile/profile_controller.dart';
+import 'package:medica_app/app/views/reels/reel_controller.dart';
 
 class HomeController extends GetxController {
   static const String doctorId = 'DOCTOR_ID';
@@ -111,6 +112,7 @@ class HomeController extends GetxController {
     Get.delete<ProfileController>(force: true);
     Get.delete<MainController>(force: true);
     Get.delete<HomeController>(force: true);
+    Get.delete<ReelController>(force: true);
     await _auth.signOut();
     Get.offAllNamed(Routes.signin);
   }

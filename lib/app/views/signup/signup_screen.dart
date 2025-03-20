@@ -171,14 +171,7 @@ class SignUpScreen extends StatelessWidget {
 
                           const SizedBox(height: 15),
 
-                          // Google Sign-In Button (Restored)
-                          // CustomButton(
-                          //   text: AppConstants.signInWithGoogle,
-                          //   onPressed: controller.googleSignIn,
-                          //   paddingVertical: 12,
-                          //   color: AppColors.white,
-                          //   textColor: AppColors.black,
-                          // ),
+                          
                           GetBuilder<SignUpController>(
                               id: SignUpController.signUpButton,
                               builder: (ctx) {

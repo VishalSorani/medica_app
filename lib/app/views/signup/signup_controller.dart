@@ -116,6 +116,7 @@ class SignUpController extends GetxController {
       contactNumber: contactNumberController.text.trim(),
       createdAt: DateTime.now(),
       profileImage: '',
+      reels: [],
       email: emailController.text.trim(),
     );
 

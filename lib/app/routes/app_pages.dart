@@ -16,6 +16,8 @@ import 'package:medica_app/app/views/managedoctors/managedoctors_binding.dart';
 import 'package:medica_app/app/views/managedoctors/managedoctors_screen.dart';
 import 'package:medica_app/app/views/profile/profile_binding.dart';
 import 'package:medica_app/app/views/profile/profile_screen.dart';
+import 'package:medica_app/app/views/reels/reel_binding.dart';
+import 'package:medica_app/app/views/reels/reel_screen.dart';
 import 'package:medica_app/app/views/signin/signin_binding.dart';
 import 'package:medica_app/app/views/signin/signin_screen.dart';
 import 'package:medica_app/app/views/signup/signup_bindng.dart';
@@ -109,8 +111,12 @@ class AppPages {
       page: () => const UserappointmentsScreen(),
       binding: UserappointmentsBinding(),
       transition: Transition.fadeIn,
-    )
+    ),
+    GetPage(
+      name: Routes.reel,
+      page: () => ReelScreen(),
+      binding: ReelBinding(),
+      transition: Transition.fadeIn,
+    ),
   ];
 }
-
-

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medica_app/app/models/doctor_model.dart';
 import 'package:medica_app/app/utils/colors.dart';
 import 'package:medica_app/app/views/managedoctors/managedoctors_controller.dart';
-import 'package:medica_app/app/widgets/doctorlist.dart';
+import 'package:medica_app/app/views/managedoctors/widgets/doctor_form.dart';
+import 'package:medica_app/app/widgets/doctor_list_item.dart';
 
 class ManagedoctorsScreen extends StatelessWidget {
   const ManagedoctorsScreen({super.key});
@@ -38,12 +40,21 @@ class ManagedoctorsScreen extends StatelessWidget {
                 return Column(children: [
                   ElevatedButton(
                     onPressed: () {
-                      controller.addDoctor();
+                      Get.to(DoctorForm());
                     },
                     child: const Text("Add Doctor"),
                   ),
                   const SizedBox(height: 16),
-                  Expanded(child: Doctorlist()),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      itemCount: controller.doctorList.length,
+                      itemBuilder: (context, index) {
+                        Doctor doctor = controller.doctorList[index];
+                        return DoctorListItem(doctor: doctor);
+                      },
+                    ),
+                  ),
                 ]);
               }));
     });

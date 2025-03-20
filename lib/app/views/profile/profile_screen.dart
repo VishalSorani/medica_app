@@ -6,12 +6,15 @@ import 'package:medica_app/app/routes/app_pages.dart';
 import 'package:medica_app/app/utils/colors.dart';
 import 'package:medica_app/app/utils/image_path.dart';
 import 'package:medica_app/app/views/profile/profile_controller.dart';
+import 'package:medica_app/app/views/profile/widgets/reel_widget.dart';
+import 'package:medica_app/app/views/reels/reel_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final reelController = Get.find<ReelController>();
     return GetBuilder<ProfileController>(
       init: ProfileController(),
       builder: (controller) {
@@ -56,88 +59,86 @@ class ProfileScreen extends StatelessWidget {
                               () => controller.signOutUser()),
                         ],
                       )
-                    : Column(
-                        children: [
-                          const SizedBox(height: 20),
+                    : SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
 
-                          // Profile Image
-                          // Container(
-                          //   width: 100,
-                          //   height: 100,
-                          //   decoration: BoxDecoration(
-                          //     shape: BoxShape.circle,
-                          //     border: Border.all(color: Colors.white, width: 2),
-                          //     image: DecorationImage(
-                          //       image: AssetImage(controller.userData?.profileImage ??
-                          //           ImagePath.profile),
-                          //       fit: BoxFit.cover,
-                          //     ),
-                          //   ),
-                          // ),
-
-                          GestureDetector(
-                            onTap: () => controller.pickProfileImage(),
-                            child: Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: controller
-                                                  .userData?.profileImage !=
-                                              null &&
-                                          controller.userData!.profileImage
-                                              .isNotEmpty &&
-                                          !controller.userData!.profileImage
-                                              .startsWith('/')
-                                      ? NetworkImage(
-                                          controller.userData!.profileImage)
-                                      : controller.profileImagePath != null &&
-                                              File(controller.profileImagePath!)
-                                                  .existsSync()
-                                          ? FileImage(File(
-                                              controller.profileImagePath!))
-                                          : AssetImage(ImagePath.profile)
-                                              as ImageProvider,
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: GestureDetector(
-                                    onTap: () => controller.pickProfileImage(),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(color: Colors.grey),
+                            GestureDetector(
+                              onTap: () => controller.pickProfileImage(),
+                              child: Stack(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage: controller
+                                                    .userData?.profileImage !=
+                                                null &&
+                                            controller.userData!.profileImage
+                                                .isNotEmpty &&
+                                            !controller.userData!.profileImage
+                                                .startsWith('/')
+                                        ? NetworkImage(
+                                            controller.userData!.profileImage)
+                                        : controller.profileImagePath != null &&
+                                                File(controller
+                                                        .profileImagePath!)
+                                                    .existsSync()
+                                            ? FileImage(File(
+                                                controller.profileImagePath!))
+                                            : AssetImage(ImagePath.profile)
+                                                as ImageProvider,
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          controller.pickProfileImage(),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                        ),
+                                        child: const Icon(Icons.edit,
+                                            size: 18, color: Colors.blue),
                                       ),
-                                      child: const Icon(Icons.edit,
-                                          size: 18, color: Colors.blue),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
 
-                          const SizedBox(height: 12),
+                            const SizedBox(height: 12),
 
-                          // Name
-                          Text(
-                            controller.userData?.name ?? 'Loading...',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                            // Name
+                            Text(
+                              controller.userData?.name ?? 'Loading...',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
 
-                          const SizedBox(height: 24),
+                            const SizedBox(height: 24),
 
-                          // Menu Options
-                          _buildMenuOption(Icons.history, 'Your Appointments',
-                              () => Get.toNamed(Routes.userAppointments)),
-                          _buildMenuOption(Icons.logout, 'Logout',
-                              () => controller.signOutUser()),
-                        ],
+                            // Menu Options
+                            _buildMenuOption(Icons.history, 'Your Appointments',
+                                () => Get.toNamed(Routes.userAppointments)),
+                            _buildMenuOption(Icons.logout, 'Logout',
+                                () => controller.signOutUser()),
+                            Get.find<ReelController>().isUploadLoading
+                                ? CircularProgressIndicator()
+                                : _buildMenuOption(Icons.logout, 'Upload Reels',
+                                    () => reelController.uploadVideo()),
+                            const SizedBox(height: 16),
+                            ReelWidget(
+                                videos: controller.userData!.reels,
+                                userId: controller.userData!.id),
+                          ],
+                        ),
                       ));
       },
     );

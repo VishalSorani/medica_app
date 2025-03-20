@@ -8,6 +8,7 @@ class Users {
   final DateTime createdAt;
   final String profileImage;
   final bool isAdmin;
+  final List<String> reels;
   final List<Appointment>? appointments; // List of user appointments
 
   Users({
@@ -18,6 +19,7 @@ class Users {
     required this.createdAt,
     required this.profileImage,
     required this.isAdmin,
+    required this.reels,
     this.appointments,
   });
 
@@ -30,6 +32,9 @@ class Users {
       createdAt: DateTime.parse(json['createdAt']),
       profileImage: json['profileImage'],
       isAdmin: json['isAdmin'] ?? false,
+      reels: json['reels'] != null
+          ? List<String>.from(json['reels'])
+          : <String>[],
       appointments: [],
     );
   }
@@ -43,6 +48,7 @@ class Users {
       'createdAt': createdAt.toIso8601String(),
       'profileImage': profileImage,
       'isAdmin': isAdmin,
+      'reels': reels,
       'appointments':
           appointments?.map((appointment) => appointment.toJson()).toList(),
     };

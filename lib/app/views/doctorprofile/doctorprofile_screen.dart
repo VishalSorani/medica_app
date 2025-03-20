@@ -40,7 +40,9 @@ class DoctorprofileScreen extends GetWidget<DoctorProfileController> {
               MainAxisAlignment.spaceBetween, // Pushes button to bottom
           children: [
             Expanded(
-              child: SingleChildScrollView(
+              child: controller.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              :  SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(

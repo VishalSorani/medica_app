@@ -35,36 +35,44 @@ class BookingController extends GetxController {
   void selectDay(DateTime newSelectedDay, DateTime newFocusedDay) {
     selectedDay = newSelectedDay;
     focusedDay = newFocusedDay;
-    
-    fetchBookedTimeSlots(); // Fetch booked slots when selecting a date
-    
+
+    fetchBookedTimeSlots();
+
     update();
   }
 
-  /// Fetch booked time slots for the selected date
   Future<void> fetchBookedTimeSlots() async {
+    if (selectedDay == null || doctor.id == null) {
+      print("❌ selectedDay or doctor.id is null");
+      return;
+    }
+
+    print("📅 Fetching booked slots for: ${selectedDay}");
+    print("👨‍⚕️ Doctor ID: ${doctor.id}");
 
     isLoading = true;
     update();
-    if (selectedDay == null) return;
 
     try {
       final bookedSlots =
           await _doctorRepo.getBookedTimeSlots(doctor.id, selectedDay!);
+
+      print(
+        "✅ Booked slots fetched: $bookedSlots, $selectedDay",
+      ); // Debug print
+
       bookedTimeSlots = bookedSlots;
-      print(bookedSlots);
+      print(bookedTimeSlots);
       update();
     } catch (e) {
-      print("Error fetching booked slots: $e");
+      print("❌ Error fetching booked slots: $e");
     }
 
     isLoading = false;
     update();
   }
 
-  /// Select appointment date and time
   void selectAppointment(DateTime date, String time) {
-
     if (bookedTimeSlots.any((slot) => slot.time == (time))) {
       Get.snackbar("Already Booked", "This time slot is unavailable.");
       return;
@@ -85,13 +93,11 @@ class BookingController extends GetxController {
 
     int selectedWeekday = selectedDay!.weekday;
 
-    // 🔹 Check if the doctor is available on this day
     if (!doctor.availableDays.contains(selectedWeekday)) {
       Get.snackbar("Not Available", "Doctor is not available today.");
       return;
     }
 
-    // 🔹 Check if the selected time slot is already booked
     bool isBooked = bookedTimeSlots.any((slot) => slot.time == selectedTime);
     if (isBooked) {
       Get.snackbar("Already Booked", "This time slot is not available.");
@@ -99,9 +105,8 @@ class BookingController extends GetxController {
     }
 
     try {
-      // 🔹 Generate appointment object
       Appointment appointment = Appointment(
-        id: "", // Firestore will generate the ID
+        id: "",
         doctorId: doctor.id,
         userId: _auth.currentUser!.uid,
         date: selectedDay!,
@@ -109,33 +114,11 @@ class BookingController extends GetxController {
         status: AppointmentStatus.pending.name,
       );
 
-      // 🔹 Save the appointment in Firestore (Global appointment collection)
       DocumentReference appointmentRef =
           await _appointmentRepo.addAppointment(appointment);
 
-      // 🔹 Get Firestore-generated ID and update appointment object
       String appointmentId = appointmentRef.id;
       appointment = appointment.copyWith(id: appointmentId);
-
-      // 🔹 Add the appointment to the **User's Firestore Document**
-      // await FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(appointment.userId)
-      //     .update({
-      //   'appointments': FieldValue.arrayUnion([appointment.toJson()])
-      // });
-
-      // 🔹 Add the appointment to the **Doctor's Firestore Document**
-      // await FirebaseFirestore.instance
-      //     .collection('doctors')
-      //     .doc(appointment.doctorId)
-      //     .update({
-      //   'appointments': FieldValue.arrayUnion([appointment.toJson()])
-      // });
-
-      // 🔹 Update UI
-      // doctor.appointments?.add(appointment);
-      // update();
 
       Get.toNamed(Routes.userAppointments);
       Get.snackbar("Success", "Appointment booked successfully.");
@@ -148,19 +131,20 @@ class BookingController extends GetxController {
   }
 
   @override
+  @override
   void onInit() {
     super.onInit();
 
-    
-
     if (Get.arguments[doctorInfo] != null) {
       doctor = Get.arguments[doctorInfo];
+    } else {
+      Get.snackbar("Error", "Doctor information not found.");
+      return;
     }
 
     selectedDay = DateTime.now();
+    selectDay(DateTime.now(), DateTime.now());
 
-    fetchBookedTimeSlots(); // Load booked slots initially
-
-    // 🔹 Listen for auth changes and update slots dynamically
+    fetchBookedTimeSlots();
   }
 }

@@ -47,16 +47,19 @@ class DoctorRepository {
   Future<List<Appointment>> getBookedTimeSlots(
       String doctorId, DateTime date) async {
     try {
+      print('doctorId: $doctorId, date: $date');
       QuerySnapshot snapshot = await _firestore
           .collection('appointments') // 🔹 Global "appointments" collection
           .where('doctorId', isEqualTo: doctorId) // 🔹 Filter by doctor ID
           .where('date', isEqualTo: date) // 🔹 Filter by selected date
           .get();
-
+print('snapshot: $snapshot');
       List<Appointment> bookedSlots = snapshot.docs
           .map((doc) =>
               Appointment.fromJson(doc.data() as Map<String, dynamic>, doc.id))
           .toList();
+
+      print('bookedSlots: $bookedSlots');
 
       return bookedSlots;
     } catch (e) {
@@ -82,7 +85,7 @@ class DoctorRepository {
   //   }
   // }
 
-  Future<void> addDoctor() async {
+  Future<void> addDoctor(Doctor doctor) async {
     try {
       List<Doctor> doctors = [
         // Cardiologists

@@ -30,12 +30,12 @@ class HomeScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    controller.signOutUser();
-                                  },
-                                  child: const Text('sign out'),
-                                ),
+                                // ElevatedButton(
+                                //   onPressed: () {
+                                //     controller.signOutUser();
+                                //   },
+                                //   child: const Text('sign out'),
+                                // ),
                                 SearchBarWidget(),
                                 HomeCarousel(),
                                 CategoriesWidget(),

@@ -18,108 +18,108 @@ class Time extends StatelessWidget {
         bool isAvailableToday = doctor.availableDays.contains(
             controller.selectedDay?.weekday ?? DateTime.now().weekday);
 
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return controller.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
                 children: [
-                  const Text(
-                    'Working Hours',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-            if (!isAvailableToday) // 🔹 Show Not Available if doctor is off
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Doctor is not available today",
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
-              )
-            else
-              Container(
-                height: 50,
-                margin: const EdgeInsets.only(top: 8),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: timeSlots.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemBuilder: (context, index) {
-                    final isSelected = controller.selectedTimeIndex == index;
-                    // final isBooked =
-                    //     controller.bookedTimeSlots.any((appointment) {
-                    //   print("checked the isbooked");
-                    //   return appointment.date == controller.selectedDay &&
-                    //       _convertTo24HourFormat(appointment.time) ==
-                    //           timeSlots[index];
-                    // });
-                    final isBooked =
-                        controller.bookedTimeSlots.any((appointment) {
-                      return appointment.date
-                              .isAtSameMomentAs(controller.selectedDay!) &&
-                          _convertTo24HourFormat(appointment.time) ==
-                              _convertTo24HourFormat(timeSlots[index]);
-                    });
-
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          right: index == timeSlots.length - 1 ? 16 : 12),
-                      child: GestureDetector(
-                        onTap: () {
-                          if (isBooked) {
-                            Get.snackbar("Already Booked",
-                                "This time slot is not available.");
-                            return;
-                          }
-                          controller.selectAppointment(
-                              controller.selectedDay!, timeSlots[index]);
-                          controller.selectedTimeIndex = index;
-                          controller.update();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: isBooked
-                                ? Colors.black // 🔹 Booked slots in black
-                                : isSelected
-                                    ? Colors.teal
-                                    : Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: isSelected
-                                    ? Colors.teal
-                                    : Colors.grey.shade300),
-                          ),
-                          child: Text(
-                            timeSlots[index],
-                            style: TextStyle(
-                              color: isBooked
-                                  ? Colors
-                                      .white // 🔹 White text for booked slots
-                                  : isSelected
-                                      ? Colors.white
-                                      : Colors.black,
-                              fontWeight: isSelected
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                            ),
-                          ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Working Hours',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
+                      ],
+                    ),
+                  ),
+                  if (!isAvailableToday) // 🔹 Show Not Available if doctor is off
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Doctor is not available today",
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
                       ),
-                    );
-                  },
-                ),
-              ),
-          ],
-        );
+                    )
+                  else
+                    Container(
+                      height: 50,
+                      margin: const EdgeInsets.only(top: 8),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: timeSlots.length,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemBuilder: (context, index) {
+                          final isSelected =
+                              controller.selectedTimeIndex == index;
+
+                          final isBooked =
+                              controller.bookedTimeSlots.any((appointment) {
+                            return appointment.date.isAtSameMomentAs(
+                                    controller.selectedDay!) &&
+                                _convertTo24HourFormat(appointment.time) ==
+                                    _convertTo24HourFormat(timeSlots[index]);
+                          });
+
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                right: index == timeSlots.length - 1 ? 16 : 12),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (isBooked) {
+                                  Get.snackbar("Already Booked",
+                                      "This time slot is not available.");
+                                  return;
+                                }
+                                controller.selectAppointment(
+                                    controller.selectedDay!, timeSlots[index]);
+                                controller.selectedTimeIndex = index;
+                                controller.update();
+                              },
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: isBooked
+                                      ? Colors.black // 🔹 Booked slots in black
+                                      : isSelected
+                                          ? Colors.teal
+                                          : Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                      color: isSelected
+                                          ? Colors.teal
+                                          : Colors.grey.shade300),
+                                ),
+                                child: Text(
+                                  timeSlots[index],
+                                  style: TextStyle(
+                                    color: isBooked
+                                        ? Colors
+                                            .white // 🔹 White text for booked slots
+                                        : isSelected
+                                            ? Colors.white
+                                            : Colors.black,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                ],
+              );
       },
     );
   }

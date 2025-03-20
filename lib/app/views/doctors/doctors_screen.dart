@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medica_app/app/models/doctor_model.dart';
 import 'package:medica_app/app/utils/colors.dart';
-import 'package:medica_app/app/widgets/doctorlist.dart';
-import 'package:medica_app/app/widgets/searchbar_widget.dart';
+import 'package:medica_app/app/views/doctors/doctors_controller.dart';
+import 'package:medica_app/app/widgets/doctor_list_item.dart';
 
 class DoctorsScreen extends StatelessWidget {
   const DoctorsScreen({super.key});
@@ -14,7 +15,7 @@ class DoctorsScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.black),
           onPressed: () {
-            Get.back(); // Navigate back
+            Get.back();
           },
         ),
         title: const Text(
@@ -29,14 +30,71 @@ class DoctorsScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          SearchBarWidget(),
-          Expanded(
-            // Ensure Doctorlist takes available space
-            child: Doctorlist(),
-          ),
-        ],
+      body: GetBuilder<DoctorController>(
+        id: DoctorController.doctorId,
+        builder: (controller) {
+          return controller.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Search Bar
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: TextField(
+                        onChanged: (value) {
+                          controller.searchDoctor(value);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search doctors...',
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: AppColors.textFieldColor,
+                        ),
+                      ),
+                    ),
+
+                    // Searched list OR all doctors
+                    Expanded(
+                      child: controller.filteredDoctorList.isEmpty
+                          ? controller.searchQuery
+                                  .isNotEmpty // <-- ADD searchQuery check
+                              ? Center(
+                                  child: Text(
+                                    "No doctor found",
+                                    style: TextStyle(
+                                        color: AppColors.primaryColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12.0),
+                                  itemCount: controller.doctorList.length,
+                                  itemBuilder: (context, index) {
+                                    Doctor doctor =
+                                        controller.doctorList[index];
+                                    return DoctorListItem(doctor: doctor);
+                                  },
+                                )
+                          : ListView.builder(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              itemCount: controller.filteredDoctorList.length,
+                              itemBuilder: (context, index) {
+                                Doctor doctor =
+                                    controller.filteredDoctorList[index];
+                                return DoctorListItem(doctor: doctor);
+                              },
+                            ),
+                    ),
+                  ],
+                );
+        },
       ),
     );
   }

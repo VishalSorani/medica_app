@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:medica_app/app/routes/app_pages.dart';
 import 'package:medica_app/app/views/homeScreen/home_controller.dart';
 import 'package:medica_app/app/views/mainscreen/main_controller.dart';
+import 'package:medica_app/app/views/reels/reel_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:medica_app/app/models/repository/user_repository.dart';
@@ -17,6 +18,9 @@ class ProfileController extends GetxController {
   final UserRepository _userRepository = UserRepository();
   Users? userData;
   String? profileImagePath; // Store the local image path
+
+
+  
 
   @override
   void onInit() {
@@ -51,15 +55,6 @@ class ProfileController extends GetxController {
       // update(); // Refresh UI
     }
   }
-
-  // 💾 Save Image to Local Storage
-  // Future<File> _saveImageLocally(File imageFile) async {
-  //   final Directory appDir = await getApplicationDocumentsDirectory();
-  //   final String fileName = path.basename(imageFile.path);
-  //   final File localImage = File('${appDir.path}//$fileName');
-
-  //   return await imageFile.copy(localImage.path);
-  // }
 
   Future<File> _saveImageLocally(File imageFile) async {
     final Directory appDir = await getApplicationDocumentsDirectory();
@@ -109,17 +104,6 @@ class ProfileController extends GetxController {
     update();
   }
 
-  // // 🚀 Clear Image Path on Logout
-  // Future<void> _clearImagePathOnLogout() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   final String userId = _auth.currentUser?.uid ?? '';
-
-  //   // Remove the saved image path
-  //   await prefs.remove('profileImagePath_$userId');
-  //   profileImagePath = null; // Reset in memory
-
-  //   update();
-  // }
 
   // 🔓 Sign Out
   void signOutUser() async {
@@ -127,6 +111,7 @@ class ProfileController extends GetxController {
     Get.delete<ProfileController>(force: true);
     Get.delete<MainController>(force: true);
     Get.delete<HomeController>(force: true);
+    Get.delete<ReelController>(force: true);
     await _auth.signOut();
     Get.offAllNamed(Routes.signin);
   }

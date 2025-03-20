@@ -33,9 +33,9 @@ class BookingScreen extends GetWidget<BookingController> {
               backgroundColor: Colors.white,
               elevation: 0,
             ),
-            body: Column(
+            body:Column(
               mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween, // Pushes button to bottom
+                  MainAxisAlignment.spaceBetween, 
               children: [
                 Expanded(
                   child: SingleChildScrollView(
@@ -52,7 +52,7 @@ class BookingScreen extends GetWidget<BookingController> {
                   ),
                 ),
                 Container(
-                  width: double.infinity, // Full width
+                  width: double.infinity, 
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: ElevatedButton(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medica_app/app/models/doctor_model.dart';
-import 'package:medica_app/app/utils/image_path.dart';
 import 'package:medica_app/app/views/doctorprofile/doctorprofile_controller.dart';
 
 class ProfileCard extends StatelessWidget {
