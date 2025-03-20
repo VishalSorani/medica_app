@@ -43,12 +43,8 @@ class BookingController extends GetxController {
 
   Future<void> fetchBookedTimeSlots() async {
     if (selectedDay == null || doctor.id == null) {
-      print("❌ selectedDay or doctor.id is null");
       return;
     }
-
-    print("📅 Fetching booked slots for: ${selectedDay}");
-    print("👨‍⚕️ Doctor ID: ${doctor.id}");
 
     isLoading = true;
     update();
@@ -56,10 +52,6 @@ class BookingController extends GetxController {
     try {
       final bookedSlots =
           await _doctorRepo.getBookedTimeSlots(doctor.id, selectedDay!);
-
-      print(
-        "✅ Booked slots fetched: $bookedSlots, $selectedDay",
-      ); // Debug print
 
       bookedTimeSlots = bookedSlots;
       print(bookedTimeSlots);
@@ -131,7 +123,6 @@ class BookingController extends GetxController {
   }
 
   @override
-  @override
   void onInit() {
     super.onInit();
 
@@ -142,9 +133,12 @@ class BookingController extends GetxController {
       return;
     }
 
-    selectedDay = DateTime.now();
-    selectDay(DateTime.now(), DateTime.now());
+    selectedDay = _convertToUTC(DateTime.now());
 
     fetchBookedTimeSlots();
+  }
+
+  DateTime _convertToUTC(DateTime dateTime) {
+    return DateTime.utc(dateTime.year, dateTime.month, dateTime.day);
   }
 }

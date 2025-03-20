@@ -15,7 +15,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   print('Firebase Initialized');
-  CloudinaryContext.cloudinary = Cloudinary.fromCloudName(cloudName: "medicaapp");
+  CloudinaryContext.cloudinary =
+      Cloudinary.fromCloudName(cloudName: "medicaapp");
   runApp(MyApp());
 }
 
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Medica App',
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
